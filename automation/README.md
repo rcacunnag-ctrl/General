@@ -23,20 +23,29 @@ Macro VBA que guarda una **foto diaria** y otra **semanal** del avance del crono
 
 ## Instalación (Windows + Excel 2016/2019/2021/365)
 
-1. Descarga `Property_Scope_Plan_Jupiter_v2.xlsx` y la carpeta `automation/` en la misma carpeta.
-2. Si los archivos vienen de internet, desbloquéalos una vez. En PowerShell:
-   ```powershell
-   Get-ChildItem -Recurse | Unblock-File
-   ```
-3. Ejecuta el instalador:
-   ```powershell
-   cd automation
-   powershell -ExecutionPolicy Bypass -File .\Install-ProgressLogger.ps1 -EnableVbomAccess
-   ```
-   - `-EnableVbomAccess` activa solo durante la instalación el permiso "Trust access to the VBA project object model" y al final lo deja como estaba.
-   - Se genera `Property_Scope_Plan_Jupiter_v2.xlsm` junto al `.xlsx`. El `.xlsx` no se modifica.
-4. Abre el `.xlsm` y pulsa **Enable Content** la primera vez.
-5. Desde ahí, **trabaja siempre en el `.xlsm`**.
+1. Pon en **una misma carpeta** el libro `Property_Scope_Plan_Jupiter_v2.xlsx` y los archivos de `automation/`. También funciona con el libro en la carpeta superior.
+2. Cierra Excel y haz **doble clic en `Install.cmd`**.
+   - El instalador desbloquea los archivos descargados, busca el libro solo y genera `Property_Scope_Plan_Jupiter_v2.xlsm` en la misma carpeta. El `.xlsx` no se modifica.
+   - Activa solo durante la instalación el permiso "Trust access to the VBA project object model" y al final lo deja como estaba.
+   - Si algo falla, la ventana muestra `FAILED at step: …` con el motivo. Copia ese texto para diagnosticarlo.
+3. Abre el `.xlsm` y pulsa **Enable Content** la primera vez.
+4. Desde ahí, **trabaja siempre en el `.xlsm`**.
+
+Si prefieres la consola, desde la carpeta de los archivos:
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\Install-ProgressLogger.ps1 -EnableVbomAccess
+# o indicando el libro:
+powershell -NoProfile -ExecutionPolicy Bypass -File .\Install-ProgressLogger.ps1 -Workbook "C:\ruta\Property_Scope_Plan_Jupiter_v2.xlsx" -EnableVbomAccess
+```
+
+**Errores comunes**
+| Mensaje | Causa y solución |
+|---|---|
+| `Could not find Property_Scope_Plan_Jupiter*.xlsx` | El libro no está junto al instalador. Muévelo o usa `-Workbook`. |
+| `IT policy blocks programmatic access` | TI bloquea el acceso al proyecto VBA. Usa la instalación manual. |
+| `Excel refused access to the VBA project` | Actívalo en File > Options > Trust Center > Trust Center Settings > Macro Settings > "Trust access to the VBA project object model" y repite. |
+| `The output file is open` | Cierra el `.xlsm` en Excel y repite. |
+| Scripts deshabilitados en el sistema | Usa `Install.cmd`, que ya ejecuta con `-ExecutionPolicy Bypass`. |
 
 ### Instalación manual (Mac, o si el script está bloqueado)
 1. Abre el `.xlsx` y pulsa `Alt+F11` (en Mac: Tools > Macro > Visual Basic Editor).
@@ -64,4 +73,5 @@ Macro VBA que guarda una **foto diaria** y otra **semanal** del avance del crono
 |---|---|
 | `ProgressLogger.bas` | Módulo VBA con el registro diario y semanal |
 | `ThisWorkbook.txt` | Eventos que disparan el registro (`Workbook_Open`, `Workbook_BeforeSave`) |
+| `Install.cmd` | Lanzador de doble clic del instalador |
 | `Install-ProgressLogger.ps1` | Instalador que genera el `.xlsm` con la macro, los eventos y el botón |
