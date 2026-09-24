@@ -1,0 +1,11 @@
+' Paste into the ThisWorkbook module (VBA editor). Records today's progress when the
+' workbook is opened and again every time it is saved, so the daily row always holds
+' the latest status of the day.
+
+Private Sub Workbook_Open()
+    ProgressLogger.AutoRecord
+End Sub
+
+Private Sub Workbook_BeforeSave(ByVal SaveAsUI As Boolean, Cancel As Boolean)
+    ProgressLogger.AutoRecord
+End Sub
