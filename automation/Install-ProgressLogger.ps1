@@ -113,7 +113,7 @@ try {
     try {
         $dash = $wb.Worksheets.Item('Dashboard')
         foreach ($s in @($dash.Shapes)) { if ($s.Name -eq 'btnRecordProgress') { $s.Delete() } }
-        $anchor = $dash.Range('M3')
+        $anchor = $dash.Range('G4')
         $btn = $dash.Shapes.AddFormControl(0, $anchor.Left, $anchor.Top, 170, 26)   # 0 = xlButtonControl
         $btn.Name = 'btnRecordProgress'
         $btn.OnAction = 'RecordProgressNow'
